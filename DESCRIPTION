@@ -1,4 +1,4 @@
-Package: spread
+Package: swarm
 Version: 0.1
 Authors@R: person("Sean", "Hughes", , "smhughes@uw.edu", c("aut", "cre"))
 Type: Package
