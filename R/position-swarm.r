@@ -2,6 +2,7 @@
 #'
 #' @description \code{position_swarm} is an upgraded
 #' \code{position-jitter()} for data with a categorical variable on one axis.
+#' Also known as beeswarm plots.
 #'
 #' @param width degree of jitter in x direction. Defaults to 40\% of the
 #'   resolution of the data, or 0 if height is non-zero. Only one of height or
