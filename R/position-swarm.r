@@ -1,6 +1,6 @@
 #' Symmetric, conditional, and proportional jitter to avoid overplotting.
 #'
-#' @description \code{position_sym_jitter} is an upgraded
+#' @description \code{position_swarm} is an upgraded
 #' \code{position-jitter()} for data with a categorical variable on one axis.
 #'
 #' @param width degree of jitter in x direction. Defaults to 40\% of the
@@ -20,7 +20,7 @@
 #' section below.
 #'
 #' @section Symmetic, conditional, and proportional:
-#' \code{sym_jitter} is symmetric, conditional, and proportional.
+#' \code{swarm} is symmetric, conditional, and proportional.
 #' \strong{Symmetric}
 #' means that points are jittered approximately equally around the relevant
 #' axis. If three points overlap and all have x = 1, they will be adjusted to
@@ -48,10 +48,10 @@
 #' Finally, "preserve_order" arranges the points left to right or bottom to top
 #' based on their order in the data.
 #' @export
-position_sym_jitter <- function (width = NULL, height = NULL,
+position_swarm <- function (width = NULL, height = NULL,
   points_per_full_amount = NULL, n_bins = NULL,
   arrange_function = NULL) {
-  ggplot2::ggproto(NULL, PositionSymJitter,
+  ggplot2::ggproto(NULL, PositionSwarm,
     width = width,
     height = height,
     points_per_full_amount = points_per_full_amount,
@@ -59,7 +59,7 @@ position_sym_jitter <- function (width = NULL, height = NULL,
     arrange_function = arrange_function)
 }
 
-PositionSymJitter <- ggplot2::ggproto("PositionSymJitter", ggplot2::Position,
+PositionSwarm <- ggplot2::ggproto("PositionSwarm", ggplot2::Position,
    required_aes = c("x", "y"),
 
    setup_params = function(self, data) {
@@ -97,7 +97,7 @@ PositionSymJitter <- ggplot2::ggproto("PositionSymJitter", ggplot2::Position,
 
     if(params$width > 0) {
       trans_x <- function(x, width, y) {
-        sym_jitter(x, amount = params$width, matched_var = data$y,
+        swarm(x, amount = params$width, matched_var = data$y,
           points_per_full_amount = params$points_per_full_amount,
           n_bins = params$n_bins,
           arrange_function = params$arrange_function)
@@ -106,7 +106,7 @@ PositionSymJitter <- ggplot2::ggproto("PositionSymJitter", ggplot2::Position,
 
     if(params$height > 0) {
       trans_y <- function(x, amount, y) {
-        sym_jitter(x, amount = params$height, matched_var = data$x,
+        swarm(x, amount = params$height, matched_var = data$x,
           points_per_full_amount = params$points_per_full_amount,
           n_bins = params$n_bins,
           arrange_function = params$arrange_function)

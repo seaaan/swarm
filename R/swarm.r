@@ -1,4 +1,4 @@
-sym_jitter <- function(to_jitter, amount, matched_var,
+swarm <- function(to_jitter, amount, matched_var,
   points_per_full_amount = NULL, n_bins = 25,
   arrange_function = "v_shape") {
 
