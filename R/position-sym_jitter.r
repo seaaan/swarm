@@ -60,8 +60,9 @@ position_sym_jitter <- function (width = NULL, height = NULL,
 }
 
 PositionSymJitter <- ggplot2::ggproto("PositionSymJitter", ggplot2::Position,
-  compute_defaults = function(self, data) {
-    ggplot2:::check_required_aesthetics(c("x", "y"), names(data), "position_sym_jitter")
+   required_aes = c("x", "y"),
+
+   setup_params = function(self, data) {
     if (ggplot2:::empty(data)) return(data.frame())
 
     nullZeroWidth <- is.null(self$width) || self$width == 0
@@ -90,7 +91,7 @@ PositionSymJitter <- ggplot2::ggproto("PositionSymJitter", ggplot2::Position,
     )
   },
 
-  adjust = function(data, params) {
+  compute_layer = function(data, params, scales) {
     trans_x <- NULL
     trans_y <- NULL
 
