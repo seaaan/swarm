@@ -8,6 +8,20 @@ swarm <- function(to_jitter, amount, matched_var,
 #   n_bins <- 25
 #   arrange_function <- "v_shape"
   
+  # Needs:
+  # 1. Calculate bins by group (i.e. "x") rather than all together
+  # 2. Figure out what causes this error: 
+  # ggplot(data.frame(x = 1:10, y = rnorm(100)), aes(x,y)) + geom_point(position = position_swarm(width = 0.1))
+  # Error in if (is.unsorted(bins)) stop("bins must be sorted, but it isn't") : 
+  #  missing value where TRUE/FALSE needed 
+  # 3. Add MAX_BINS argument
+  # 4. Remove points_per_full_amount, n_bins
+  # 5. Update width argument to smaller default
+  # 6. Tweak points_per_full_width defaults
+  
+  
+  
+  
   # check if integer
   if (any(to_jitter %% 1 != 0)) {
     stop(paste("The axis to be jittered must be only integers/whole numbers"))
