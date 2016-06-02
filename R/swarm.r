@@ -2,6 +2,12 @@ swarm <- function(to_jitter, amount, matched_var,
   points_per_full_amount = NULL, n_bins = 25,
   arrange_function = "v_shape") {
 
+#   to_jitter <- rep(1:4, 25) # "x" values
+#   matched_var <- rnorm(100) # "y" values
+#   amount <- 0.1
+#   n_bins <- 25
+#   arrange_function <- "v_shape"
+  
   # check if integer
   if (any(to_jitter %% 1 != 0)) {
     stop(paste("The axis to be jittered must be only integers/whole numbers"))

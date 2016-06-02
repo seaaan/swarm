@@ -35,10 +35,27 @@ get_bin_ids <- function(x, y, n_bins) {
 # @return a vector of length n_bins with equally-spaced elements from
 #min(x) to max(x), inclusive.
 get_bins <- function(x, n_bins) {
-   if(n_bins <= 0) stop("n_bins must be > 0")
+    
+  d <- data.frame(xx = x, order = 1:length(x))
+  
+  d <- d[order(d$xx), ]
+  
+  d$diff <- c(0, diff(d$xx))
 
-   seq(from = min(x, na.rm = TRUE), to = max(x, na.rm = TRUE),
-      length.out = n_bins)
+  # calculate resolution  
+  MAX_BINS <- 100
+  resolution <- diff(range(d$xx)) / MAX_BINS
+
+  # mark the ones that are very close together with NA
+  d$bin <- ifelse(d$diff < resolution, NA, d$xx)
+  
+  # fill in NAs with previous value
+  d <- zoo::na.locf(d)  
+  
+  # first is always NA
+  d$bin[1] <- d$xx[1]
+  
+  d$bin
 }
 
 # Returns a numeric vector mapping each element of x to a bin.
@@ -52,12 +69,12 @@ get_bins <- function(x, n_bins) {
 map_to_bin <- function(x, bins) {
 
    #validate parameters
-   if ( min(x, na.rm = TRUE) != min(bins) ||
-         (max(x, na.rm = TRUE) != max(bins) && length(bins) != 1)) {
-      stop(paste("x and bins must have the same minimum and maximum. min(x) =",
-         min(x, na.rm = TRUE), "min(bins) =", min(bins), "max(x) =",
-         max(x, na.rm = TRUE), "max(bins) =", max(bins, na.rm = TRUE)))
-   }
+#    if ( min(x, na.rm = TRUE) != min(bins) ||
+#          (max(x, na.rm = TRUE) != max(bins) && length(bins) != 1)) {
+#       stop(paste("x and bins must have the same minimum and maximum. min(x) =",
+#          min(x, na.rm = TRUE), "min(bins) =", min(bins), "max(x) =",
+#          max(x, na.rm = TRUE), "max(bins) =", max(bins, na.rm = TRUE)))
+#    }
    if (is.unsorted(bins)) stop("bins must be sorted, but it isn't")
 
    result <- sapply(x, FUN = function(i) ifelse(is.na(i), 0,
