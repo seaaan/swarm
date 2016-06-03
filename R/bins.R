@@ -31,7 +31,7 @@ get_bin_ids <- function(x, y, n_bins) {
 # @param n_bins the number of bins (must be > 0)
 # @return a vector of length n_bins with equally-spaced elements from
 #min(x) to max(x), inclusive.
-get_bins <- function(value, grouping, n_bins) {
+get_bins <- function(value, grouping, threshold) {
 
    calculate <- function(value, grouping) {
      d <- data.frame(value = value, grouping = grouping,
@@ -44,8 +44,7 @@ get_bins <- function(value, grouping, n_bins) {
      d$diff <- c(0, diff(d$value))
 
      # calculate resolution
-     MAX_BINS <- 100
-     resolution <- diff(range(d$value)) / MAX_BINS
+     resolution <- diff(range(d$value)) * threshold
 
      # mark the ones that are very close together with NA
      d$bin <- ifelse(d$diff < resolution, NA, d$value)

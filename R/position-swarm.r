@@ -12,9 +12,8 @@
 #' jittering to spread across the full width or height. This controls the
 #' proportional nature of the jitter. Defaults to the number of points in the
 #' most populous bin.
-#' @param n_bins the number of bins to divide the data into (per column
-#' or row). Points that fall into the same bin and share the same column or row
-#' will be jittered. Defaults to 25.
+#' @param threshold Percent difference between adjacent points below which they
+#' are jittered. Defaults to 0.01.
 #' @param arrange_function the name of a function defining how the points are
 #' arranged within a bin. Defaults to "v_shape". Other possibilities are
 #' "inverted_v_shape" and "preserve_order". See "Arrangement of jittered points"
@@ -40,7 +39,7 @@
 #' by size and jitters them such that the greatest and second-greatest values
 #' are jittered most (but in opposite directions) and the smallest and
 #' second-smallest values are jittered least. This creates a subtle V-shape. At
-#' lower values of \code{n_bins}, the V-shape can be overly pronounced,
+#' lower values of \code{threshold}, the V-shape can be overly pronounced,
 #' which can be remedied by increasing the value of this parameter.
 #'
 #' The \code{arrange_function} "inverted_v_shape" simply flips the V-shape 180
@@ -50,13 +49,13 @@
 #' based on their order in the data.
 #' @export
 position_swarm <- function (width = NULL, height = NULL,
-  points_per_full_amount = NULL, n_bins = NULL,
+  points_per_full_amount = NULL, threshold = NULL,
   arrange_function = NULL) {
   ggplot2::ggproto(NULL, PositionSwarm,
     width = width,
     height = height,
     points_per_full_amount = points_per_full_amount,
-    n_bins = n_bins,
+    threshold = threshold,
     arrange_function = arrange_function)
 }
 
@@ -87,7 +86,7 @@ PositionSwarm <- ggplot2::ggproto("PositionSwarm", ggplot2::Position,
     list(width = tempWidth,
       height = tempHeight,
       points_per_full_amount = self$points_per_full_amount %||% NULL,
-      n_bins = self$n_bins %||% 25,
+      threshold = self$threshold %||% 0.01,
       arrange_function = self$arrange_function %||% "v_shape"
     )
   },
@@ -100,7 +99,7 @@ PositionSwarm <- ggplot2::ggproto("PositionSwarm", ggplot2::Position,
       trans_x <- function(x, width, y) {
         swarm(x, amount = params$width, matched_var = data$y,
           points_per_full_amount = params$points_per_full_amount,
-          n_bins = params$n_bins,
+          threshold = params$threshold,
           arrange_function = params$arrange_function)
       }
     }
@@ -109,7 +108,7 @@ PositionSwarm <- ggplot2::ggproto("PositionSwarm", ggplot2::Position,
       trans_y <- function(x, amount, y) {
         swarm(x, amount = params$height, matched_var = data$x,
           points_per_full_amount = params$points_per_full_amount,
-          n_bins = params$n_bins,
+          threshold = params$threshold,
           arrange_function = params$arrange_function)
       }
     }
