@@ -31,35 +31,39 @@ get_bin_ids <- function(x, y, n_bins) {
 # @param n_bins the number of bins (must be > 0)
 # @return a vector of length n_bins with equally-spaced elements from
 #min(x) to max(x), inclusive.
-get_bins <- function(x, grouping, n_bins) {
+get_bins <- function(value, grouping, n_bins) {
 
-   calculate <- function(x, grouping) {
-     d <- data.frame(xx = x, grouping = grouping, order = 1:length(x))
+   calculate <- function(value, grouping) {
+     d <- data.frame(value = value, grouping = grouping,
+        order = 1:length(value))
 
-     d <- d[order(d$xx), ]
+     # sort the data frame by value to calculate adjacent differences
+     d <- d[order(d$value), ]
 
-     d$diff <- c(0, diff(d$xx))
+     # calculate the differences between adjacent rows
+     d$diff <- c(0, diff(d$value))
 
      # calculate resolution
      MAX_BINS <- 100
-     resolution <- diff(range(d$xx)) / MAX_BINS
+     resolution <- diff(range(d$value)) / MAX_BINS
 
      # mark the ones that are very close together with NA
-     d$bin <- ifelse(d$diff < resolution, NA, d$xx)
+     d$bin <- ifelse(d$diff < resolution, NA, d$value)
 
      # first is always NA (need to do this before filling in the NAs
      # in case the second one needs to fill from here)
-     d$bin[1] <- d$xx[1]
+     d$bin[1] <- d$value[1]
 
      # fill in NAs with previous value
      d <- zoo::na.locf(d)
 
+     # return the bins and put them back in the original order
      d$bin[order(d$order)]
    }
 
-   d <- data.frame(xx = x, order = 1:length(x), grouping = grouping) %>%
+   d <- data.frame(value = value, grouping = grouping) %>%
       group_by(grouping) %>%
-      mutate(n = calculate(xx, grouping))
+      mutate(bin = calculate(value, grouping))
 
-   d$n
+   d$bin
 }
