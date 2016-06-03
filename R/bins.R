@@ -20,11 +20,11 @@ get_bin_ids <- function(x, y, n_bins) {
    bins <- get_bins(y, n_bins)
 
    # map y-values to bin number
-   y_mapped <- map_to_bin(y, bins)
+   #y_mapped <- map_to_bin(y, bins)
 
    # create a bin descriptor for each (x, y) point, so all of the points with the
    # same x and in the same y bin will have the same bin descriptor
-   paste(x, y_mapped, sep = ", ")
+   paste(bins, x, sep = ", ")
 }
 
 # Creates a numeric vector of length n_bins from min(x) to max(x),
@@ -62,7 +62,7 @@ get_bins <- function(x, n_bins) {
 
    d <- data.frame(xx = x, order = 1:length(x))
 
-   sort(calculate(d$xx))
+   calculate(d$xx)
 
 
 }
