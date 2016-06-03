@@ -35,27 +35,36 @@ get_bin_ids <- function(x, y, n_bins) {
 # @return a vector of length n_bins with equally-spaced elements from
 #min(x) to max(x), inclusive.
 get_bins <- function(x, n_bins) {
-    
-  d <- data.frame(xx = x, order = 1:length(x))
-  
-  d <- d[order(d$xx), ]
-  
-  d$diff <- c(0, diff(d$xx))
 
-  # calculate resolution  
-  MAX_BINS <- 100
-  resolution <- diff(range(d$xx)) / MAX_BINS
+   calculate <- function(x) {
+     d <- data.frame(xx = x, order = 1:length(x))
 
-  # mark the ones that are very close together with NA
-  d$bin <- ifelse(d$diff < resolution, NA, d$xx)
-  
-  # fill in NAs with previous value
-  d <- zoo::na.locf(d)  
-  
-  # first is always NA
-  d$bin[1] <- d$xx[1]
-  
-  d$bin
+     d <- d[order(d$xx), ]
+
+     d$diff <- c(0, diff(d$xx))
+
+     # calculate resolution
+     MAX_BINS <- 100
+     resolution <- diff(range(d$xx)) / MAX_BINS
+
+     # mark the ones that are very close together with NA
+     d$bin <- ifelse(d$diff < resolution, NA, d$xx)
+
+     # first is always NA (need to do this before filling in the NAs
+     # in case the second one needs to fill from here)
+     d$bin[1] <- d$xx[1]
+
+     # fill in NAs with previous value
+     d <- zoo::na.locf(d)
+
+     d$bin[order(d$order)]
+   }
+
+   d <- data.frame(xx = x, order = 1:length(x))
+
+   sort(calculate(d$xx))
+
+
 }
 
 # Returns a numeric vector mapping each element of x to a bin.
