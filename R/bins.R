@@ -61,9 +61,9 @@ get_bins <- function(value, grouping, n_bins) {
      d$bin[order(d$order)]
    }
 
-   d <- data.frame(value = value, grouping = grouping) %>%
-      group_by(grouping) %>%
-      mutate(bin = calculate(value, grouping))
+   d <- data.frame(value = value, grouping = grouping)
+   d <- dplyr::group_by(d, grouping)
+   d <- dplyr::mutate(d, bin = calculate(value, grouping))
 
    d$bin
 }
