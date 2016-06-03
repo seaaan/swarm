@@ -11,4 +11,6 @@ LazyData: TRUE
 Depends:
    R (>= 2.14)
 Imports:
-   ggplot2 (>= 1.0.1.9002)
+   ggplot2 (>= 1.0.1.9002),
+    dplyr,
+    zoo
