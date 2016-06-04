@@ -32,6 +32,8 @@ get_bin_ids <- function(x, y, n_bins) {
 # @return a vector of length n_bins with equally-spaced elements from
 #min(x) to max(x), inclusive.
 get_bins <- function(value, grouping, threshold) {
+   # calculate resolution
+   resolution <- diff(range(value)) * threshold
 
    calculate <- function(value, grouping) {
      d <- data.frame(value = value, grouping = grouping,
@@ -42,9 +44,6 @@ get_bins <- function(value, grouping, threshold) {
 
      # calculate the differences between adjacent rows
      d$diff <- c(0, diff(d$value))
-
-     # calculate resolution
-     resolution <- diff(range(d$value)) * threshold
 
      # mark the ones that are very close together with NA
      d$bin <- ifelse(d$diff < resolution, NA, d$value)
