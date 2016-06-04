@@ -4,13 +4,14 @@ Authors@R: person("Sean", "Hughes", , "smhughes@uw.edu", c("aut", "cre"))
 Type: Package
 Title: Spread out overplotted data
 Description: Spread out overplotted symbols. It symmetrically, conditionally,
-   and proportionally spreads out columns of symbols to minimize overplotting
-   while simultaneously showing the distribution of the data.
+    and proportionally spreads out columns of symbols to minimize overplotting
+    while simultaneously showing the distribution of the data.
 License: What license is it under?
 LazyData: TRUE
 Depends:
-   R (>= 2.14)
+    R (>= 2.14)
 Imports:
-   ggplot2 (>= 1.0.1.9002),
+    ggplot2 (>= 1.0.1.9002),
     dplyr,
     zoo
+RoxygenNote: 5.0.1
