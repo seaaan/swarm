@@ -53,6 +53,14 @@ get_bins <- function(value, grouping, threshold) {
      # in case the second one needs to fill from here)
      d$bin[1] <- d$value[1]
 
+     # if too many sequential values are jittered, the whole plot
+     # turns into one big v, so when > 10 in a row, start a new
+     # v every tenth
+     MAX_PER_BIN <- 10
+     d$sequentialNA <- sequence(rle(is.na(d$bin))$lengths)
+     d$bin <- ifelse(d$sequentialNA %% MAX_PER_BIN == 0,
+        d$value, d$bin)
+
      # fill in NAs with previous value
      d <- zoo::na.locf(d)
 
