@@ -100,7 +100,8 @@ PositionSwarm <- ggplot2::ggproto("PositionSwarm", ggplot2::Position,
         swarm(x, amount = params$width, matched_var = data$y,
           points_per_full_amount = params$points_per_full_amount,
           threshold = params$threshold,
-          arrange_function = params$arrange_function)
+          arrange_function = params$arrange_function,
+           panel = data$PANEL)
       }
     }
 
@@ -109,7 +110,8 @@ PositionSwarm <- ggplot2::ggproto("PositionSwarm", ggplot2::Position,
         swarm(x, amount = params$height, matched_var = data$x,
           points_per_full_amount = params$points_per_full_amount,
           threshold = params$threshold,
-          arrange_function = params$arrange_function)
+          arrange_function = params$arrange_function,
+           panel = data$PANEL)
       }
     }
 

@@ -1,31 +1,43 @@
 swarm <- function(to_jitter, amount, matched_var,
   points_per_full_amount = NULL, threshold = 0.01,
-  arrange_function = "v_shape") {
+  arrange_function = "v_shape", panel = NULL) {
 
   # check if integer
   if (any(to_jitter %% 1 != 0)) {
     stop(paste("The axis to be jittered must be only integers/whole numbers"))
   }
 
-  bin_id <- get_bin_ids(to_jitter, matched_var, threshold)
+   temp <- data.frame(to_jitter = to_jitter,
+      matched_var = matched_var, panel = panel)
 
-  # create list where each element (a level of bin_id) has two components:
-  #   indices = indices of to_jitter in that bin_id group
-  #   offsets = amount to offset based on number of elements in group
-  elements <- as.list(levels(factor(bin_id)))
-  result <- lapply(elements, FUN = function(elem) {
-    indices <- which(elem == bin_id)
-    values <- matched_var[indices]
-    offsets <- get_offsets(values, amount, arrange_function)
+   temp %>%
+      group_by(panel) %>%
+      mutate(jittered = swarm_group(to_jitter, amount, matched_var,
+         threshold, points_per_full_amount, arrange_function)) %>%
+      .$jittered
+}
 
-    list(indices = indices, offsets = offsets)
-  })
+swarm_group <- function(to_jitter, amount, matched_var, threshold,
+   points_per_full_amount, arrange_function) {
+   bin_id <- get_bin_ids(to_jitter, matched_var, threshold)
 
-  result <- scale_offsets(result, points_per_full_amount)
+   # create list where each element (a level of bin_id) has two components:
+   #   indices = indices of to_jitter in that bin_id group
+   #   offsets = amount to offset based on number of elements in group
+   elements <- as.list(levels(factor(bin_id)))
+   result <- lapply(elements, FUN = function(elem) {
+      indices <- which(elem == bin_id)
+      values <- matched_var[indices]
+      offsets <- get_offsets(values, amount, arrange_function)
 
-  # order offsets by indices
-  offsets <- map_offsets_to_indices(result)
+      list(indices = indices, offsets = offsets)
+   })
 
-  # return variable transformed by offsets
-  to_jitter + offsets
+   result <- scale_offsets(result, points_per_full_amount)
+
+   # order offsets by indices
+   offsets <- map_offsets_to_indices(result)
+
+   # return variable transformed by offsets
+   to_jitter + offsets
 }
