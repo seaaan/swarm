@@ -10,9 +10,9 @@ swarm <- function(to_jitter, amount, matched_var,
    temp <- data.frame(to_jitter = to_jitter,
       matched_var = matched_var, panel = panel)
 
-   temp <- group_by(temp, panel)
+   temp <- dplyr::group_by(temp, panel)
 
-   temp <- mutate(temp,
+   temp <- dplyr::mutate(temp,
       jittered = swarm_group(to_jitter, amount, matched_var,
          threshold, points_per_full_amount, arrange_function))
 
